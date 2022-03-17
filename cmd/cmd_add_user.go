@@ -6,31 +6,61 @@ import (
 
 	"github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/app/users"
 	"github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/platform"
+	"github.com/AlecAivazis/survey/v2"
 )
 
 type CmdAddUser struct {
+	Questions []*survey.Question
 }
 
-func (cmd CmdAddUser) Execute(ctx context.Context) error {
+func (c *CmdAddUser) BuidQuestion() {
+	if c.Questions == nil {
+		c.Questions = []*survey.Question{
+			{
+				Name: "name",
+				Prompt: &survey.Input{
+					Message: "Enter your name: ",
+				},
+			},
+			{
+				Name: "phone",
+				Prompt: &survey.Input{
+					Message: "Enter Phone Number: ",
+				},
+			},
+			{
+				Name: "email",
+				Prompt: &survey.Input{
+					Message: "Enter Email Address: ",
+				},
+			},
+			{
+				Name: "pin",
+				Prompt: &survey.Password{
+					Message: "Enter new pin: ",
+				},
+			},
+			{
+				Name: "confirm_pin",
+				Prompt: &survey.Password{
+					Message: "Enter Pin Again: ",
+				},
+			},
+		}
+	}
+}
+func (c *CmdAddUser) Execute(ctx context.Context) error {
 	service := ctx.Value(platform.UserServiceKey)
-	user := users.CreateUserDto{}
-
-	fmt.Println("Enter Phone Number: ")
-	fmt.Scan(&user.Phone)
-	fmt.Println("Enter your email: ")
-	fmt.Scan(&user.Email)
-	fmt.Println("Enter your pin: ")
-	fmt.Scan(&user.Pin)
-	fmt.Println("Enter your pin again: ")
-	fmt.Scan(&user.ConfirmPin)
-
+	user := &users.CreateUserDto{}
+	c.BuidQuestion()
+	survey.Ask(c.Questions, user)
 	var userService users.UserService = service.(users.UserService)
-	userDb, err := userService.CreateUser(user)
+	userDb, err := userService.CreateUser(*user)
 	if err != nil {
-		fmt.Printf("Error: %v\n", err)
+		fmt.Printf("\nError: %v\n", err)
 		return err
 	}
 
-	fmt.Printf("User %v has been created", userDb.ID)
+	fmt.Printf("\nUser %v has been created\n", userDb.ID)
 	return nil
 }
