@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/app/topups"
@@ -19,6 +20,7 @@ const (
 
 type Application struct {
 	choice   int8
+	errorMsg string
 	config   *platform.Configuration
 	cmds     map[int8]Command
 	ctx      context.Context
@@ -99,34 +101,61 @@ func (a Application) showInfo() string {
 	info += "|  0. Exit                                                   |\n"
 	return info
 }
-func (a *Application) ShowMenu() {
+func (a *Application) ShowMenu() error {
 	var choice int8
-	print("Enter your choice: ")
+	print("\nEnter your choice: \n")
 	_, err := fmt.Scanf("%d", &choice)
 	if err != nil {
-		println("Invalid input, only accept number from 1 to 0!")
+		a.errorMsg = "\nInvalid input, only accept number!\n"
+		return err
 	}
-	a.choice = choice
+
+	if _, ok := a.cmds[choice]; ok {
+		a.choice = choice
+		return nil
+	}
+
+	if choice == 0 {
+		print(a.ThankYou())
+		a.choice = choice
+		return errors.New("Exit")
+	}
+
+	a.errorMsg = "\nInvalid choice, please try again!\n"
+	return errors.New("invalid choice")
 }
 
 func (a *Application) Update() string {
 	output := divider
 	output += a.ShowHeader()
 	output += spacing
-	output += a.showInfo()
+	if a.GetChoice() == 0 {
+		output += a.ThankYou()
+	} else {
+		output += a.showInfo()
+	}
 	output += spacing
 	output += divider
+	if a.errorMsg != "" {
+		output += a.errorMsg
+		a.errorMsg = ""
+	}
 
 	return output
 }
 
+func (a Application) ThankYou() string {
+	message := "Terima Kasih Telah bertansaki dengan kami!\n"
+	return message
+}
+
 func (a *Application) Run() {
 	fmt.Print(a.Update())
-	if a.choice > 0 {
-		a.cmds[a.choice].Execute(a.ctx)
+	if val, ok := a.cmds[a.choice]; ok {
+		val.Execute(a.ctx)
 	} else {
-		if a.choice == 0 {
-			println("Terima Kasih Telah bertansaki dengan kami!")
+		if a.choice > 0 {
+			a.errorMsg = "Invalid choice!"
 		}
 	}
 }
