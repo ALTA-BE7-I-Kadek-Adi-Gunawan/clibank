@@ -35,3 +35,8 @@ func (m *MockUserRepository) Update(phone string, data UpdateUserDto) (User, err
 	args := m.Called(phone, data)
 	return args.Get(0).(User), args.Error(1)
 }
+
+func (m *MockUserRepository) Delete(phone string) error {
+	args := m.Called(phone)
+	return args.Error(0)
+}

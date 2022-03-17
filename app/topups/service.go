@@ -9,6 +9,7 @@ type ITopupService interface {
 	Topup(option TopupWalletDTO) error
 	CreateTopupOption(option AddTopupOptionDTO) error
 	GetTopupOptions() ([]TopupOption, error)
+	GetTopUpHistory() ([]TopupHistory, error)
 }
 
 type TopupService struct {
@@ -86,4 +87,8 @@ func (s *TopupService) CreateTopupOption(option AddTopupOptionDTO) error {
 
 func (s *TopupService) GetTopupOptions() ([]TopupOption, error) {
 	return s.topupRepo.GetTopupOptions()
+}
+
+func (s *TopupService) GetTopUpHistory() ([]TopupHistory, error) {
+	return s.topupRepo.GetTopUpHistory()
 }
