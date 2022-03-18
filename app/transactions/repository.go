@@ -7,6 +7,7 @@ import (
 
 type ITransactionRepository interface {
 	Transfer(sender *users.Account, receiver *users.Account, ammount float64) error
+	TransferList() ([]Transaction, error)
 }
 
 type TransactionRepository struct {
@@ -56,4 +57,13 @@ func (u *TransactionRepository) Transfer(sender *users.Account, receiver *users.
 		return nil
 	})
 	return err
+}
+
+func (u *TransactionRepository) TransferList() ([]Transaction, error) {
+	transactions := []Transaction{}
+	err := u.db.Where("type = ?", "Credit").Find(&transactions).Error
+	if err != nil {
+		return transactions, err
+	}
+	return transactions, nil
 }
