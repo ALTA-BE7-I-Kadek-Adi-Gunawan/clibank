@@ -8,6 +8,7 @@ import (
 
 type ITransactionService interface {
 	Transfer(receiverPhone string, senderPhone string, ammount float64) error
+	TransferList() ([]Transaction, error)
 }
 
 type TransactionService struct {
@@ -34,4 +35,8 @@ func (u *TransactionService) Transfer(receiverPhone string, senderPhone string, 
 		return errors.New("balance is not sufficient to do transfer")
 	}
 	return u.repository.Transfer(receiver.Account, sender.Account, ammount)
+}
+
+func (u *TransactionService) TransferList() ([]Transaction, error) {
+	return u.repository.TransferList()
 }
