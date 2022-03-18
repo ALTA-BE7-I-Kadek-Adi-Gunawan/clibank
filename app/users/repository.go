@@ -83,7 +83,7 @@ func (r *UserRepository) CheckPin(phone string, pin string) (bool, error) {
 
 func (r *UserRepository) Update(phone string, data UpdateUserDto) (User, error) {
 	user := &User{}
-	err := r.db.Joins("Account").Where("phone_number = ?", phone).First(&user).Error
+	err := r.db.Joins("Account").Where("Account.phone_number = ?", phone).First(&user).Error
 	if err != nil {
 		return User{}, err
 	}
