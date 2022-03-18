@@ -3,11 +3,12 @@ package users
 import "errors"
 
 type IUserService interface {
-	GetUser(phone string) (*User, error)
+	// GetUser(phone string) (*User, error)
 	GetUsers() ([]*User, error)
-	CreateUser(data CreateUserDto) error
 	UpdateUser(phone string, pin string, data UpdateUserDto) error
 	DeleteUser(phone string) error
+	CreateUser(data CreateUserDto) (User, error)
+	GetUser(phone string) (*User, error)
 }
 
 type UserService struct {

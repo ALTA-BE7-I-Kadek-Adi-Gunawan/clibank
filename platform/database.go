@@ -2,6 +2,7 @@ package platform
 
 import (
 	"github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/app/topups"
+	"github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/app/transactions"
 	"github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/app/users"
 	"github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/app/wallets"
 	"gorm.io/driver/mysql"
@@ -32,4 +33,5 @@ func (db Database) Migrate() {
 	db.AutoMigrate(&users.Account{})
 	db.AutoMigrate(&topups.TopupWallet{})
 	db.AutoMigrate(&topups.TopupOption{})
+	db.AutoMigrate(&transactions.Transaction{})
 }

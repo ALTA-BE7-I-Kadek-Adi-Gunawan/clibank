@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/app/topups"
+	"github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/app/transactions"
 	"github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/app/users"
 	"github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/app/wallets"
 	"github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/cmd"
@@ -48,17 +49,21 @@ func (a *Application) Init(db *platform.Database, c *platform.Configuration) {
 	userRepo := &users.UserRepository{}
 	topupRepo := &topups.TopupRepository{}
 	walletRepo := &wallets.WalletRepository{}
+	transferRepo := &transactions.TransactionRepository{}
 	userRepo.Init(db.DB)
 	topupRepo.Init(db.DB)
 	walletRepo.Init(db.DB)
+	transferRepo.Init(db.DB)
 
 	// init all services
 	userService := &users.UserService{}
 	topupService := &topups.TopupService{}
 	walletService := &wallets.WalletService{}
+	transactionService := &transactions.TransactionService{}
 	userService.Init(userRepo)
 	walletService.Init(walletRepo)
 	topupService.Init(walletService, topupRepo)
+	transactionService.Init(transferRepo, *userService)
 
 	// seed data
 	topupService.SeedOption()
@@ -67,6 +72,7 @@ func (a *Application) Init(db *platform.Database, c *platform.Configuration) {
 	a.ctx = context.WithValue(a.ctx, platform.UserServiceKey, *userService)
 	a.ctx = context.WithValue(a.ctx, platform.TopupRepositoryKey, *topupRepo)
 	a.ctx = context.WithValue(a.ctx, platform.TopupServiceKey, *topupService)
+	a.ctx = context.WithValue(a.ctx, platform.TransactionServiceKey, *transactionService)
 
 	a.cmds = map[int8]Command{
 		1: &cmd.CmdAddUser{},

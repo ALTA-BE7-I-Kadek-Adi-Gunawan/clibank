@@ -9,10 +9,11 @@ import (
 
 const (
 	// ContextKey is the key used to store the context in the request context.
-	UserServiceKey     = iota
-	UserRepositoryKey  = iota
-	TopupRepositoryKey = iota
-	TopupServiceKey    = iota
+	UserServiceKey        = iota
+	UserRepositoryKey     = iota
+	TopupRepositoryKey    = iota
+	TopupServiceKey       = iota
+	TransactionServiceKey = iota
 )
 
 var (
