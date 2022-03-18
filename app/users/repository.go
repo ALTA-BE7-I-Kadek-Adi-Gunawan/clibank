@@ -36,6 +36,12 @@ func (u *UserRepository) FindByID(id int) (*User, error) {
 func (u *UserRepository) FindByPhone(phone string) (*User, error) {
 	var user *User
 	err := u.db.Joins("Account").Where(&User{PhoneNumber: phone}).Find(&user).Error
+	if err != nil {
+		return nil, err
+	}
+
+	err = u.db.Joins("Wallet").Find(&user.Account).Error
+
 	return user, err
 }
 
@@ -46,8 +52,8 @@ func (u *UserRepository) Create(data CreateUserDto) (User, error) {
 		Pin:         data.Pin,
 		PhoneNumber: data.Phone,
 		Account: &Account{
-			Name: "",
-			Wallet: wallets.Wallet{
+			Name: data.Name,
+			Wallet: &wallets.Wallet{
 				Balance:  0,
 				Status:   "active",
 				Currency: "IDR",

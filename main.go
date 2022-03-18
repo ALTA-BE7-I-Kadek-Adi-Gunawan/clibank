@@ -28,6 +28,7 @@ func init() {
 
 func main() {
 	for cliBank.GetChoice() != 0 {
+		// cliBank.ClearTerminal()
 		cliBank.Run()
 		cliBank.ShowMenu()
 	}

@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"runtime"
+	"strings"
 
 	"github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/app/topups"
 	"github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/app/users"
@@ -21,6 +23,7 @@ const (
 type Application struct {
 	choice   int8
 	errorMsg string
+	display  string
 	config   *platform.Configuration
 	cmds     map[int8]Command
 	ctx      context.Context
@@ -101,6 +104,29 @@ func (a Application) showInfo() string {
 	info += "|  0. Exit                                                   |\n"
 	return info
 }
+
+func (a *Application) ClearTerminal() error {
+	// find total \n in string
+	if a.display == "" {
+		return errors.New("Display is empty")
+	}
+	lines := strings.Count(a.display, "\n")
+	if runtime.GOOS == "windows" {
+		for i := 0; i < lines; i++ {
+			fmt.Printf("\033[F\033[K")
+		}
+	} else if runtime.GOOS == "linux" {
+		for i := 0; i < lines; i++ {
+			fmt.Print("\033[1A")
+		}
+	} else {
+		return errors.New("OS not supported")
+	}
+
+	return nil
+
+}
+
 func (a *Application) ShowMenu() error {
 	var choice int8
 	print("\nEnter your choice: \n")
@@ -150,7 +176,8 @@ func (a Application) ThankYou() string {
 }
 
 func (a *Application) Run() {
-	fmt.Print(a.Update())
+	a.display = a.Update()
+	fmt.Print(a.display)
 	if val, ok := a.cmds[a.choice]; ok {
 		val.Execute(a.ctx)
 	} else {

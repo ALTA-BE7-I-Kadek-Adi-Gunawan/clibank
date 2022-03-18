@@ -1,6 +1,7 @@
 {
     "conventionalCommits.scopes": [
         "users",
-        "wallet"
+        "wallet",
+        "cli"
     ]
 }

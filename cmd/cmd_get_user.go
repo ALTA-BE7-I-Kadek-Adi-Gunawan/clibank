@@ -32,13 +32,18 @@ func (c *CmdGetUser) Execute(ctx context.Context) error {
 	var userService users.UserService = service.(users.UserService)
 	c.BuildQuestion()
 	survey.Ask(c.Questions, c)
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Print("\nUser Input Error\n", r)
+		}
+	}()
 	userDb, err := userService.GetUser(c.Phone)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
 		return err
 	}
 
-	fmt.Printf("User %v phone %v %.2f w", userDb.Email, userDb.Account.PhoneNumber, userDb.Account.Wallet.Balance)
+	fmt.Printf("User %v phone %v balance Rp.%.2f", userDb.Email, userDb.Account.PhoneNumber, userDb.Account.Wallet.Balance)
 
 	return nil
 }
