@@ -16,6 +16,7 @@ import (
 	"github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/controller"
 	"github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/platform"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
@@ -210,7 +211,9 @@ func (a *Application) Run(s ...string) error {
 func (a *Application) RunServer() {
 
 	e := echo.New()
-
+	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+		Format: "method=${method}, uri=${uri}, status=${status}\n",
+	}))
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")

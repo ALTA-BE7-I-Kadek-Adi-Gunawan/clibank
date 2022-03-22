@@ -2,6 +2,7 @@
     "conventionalCommits.scopes": [
         "users",
         "wallet",
-        "cli"
+        "cli",
+        "web"
     ]
 }
