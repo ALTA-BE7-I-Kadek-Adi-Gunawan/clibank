@@ -3,8 +3,8 @@ package controller
 import (
 	"strconv"
 
-	"github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/app/responses"
-	_users "github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/app/users"
+	"github.com/1layar/clibank/app/responses"
+	_users "github.com/1layar/clibank/app/users"
 	"github.com/labstack/echo/v4"
 	"github.com/samber/lo"
 )

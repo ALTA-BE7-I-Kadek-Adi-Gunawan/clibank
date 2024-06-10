@@ -1,10 +1,10 @@
 package platform
 
 import (
-	"github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/app/topups"
-	"github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/app/transactions"
-	"github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/app/users"
-	"github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/app/wallets"
+	"github.com/1layar/clibank/app/topups"
+	"github.com/1layar/clibank/app/transactions"
+	"github.com/1layar/clibank/app/users"
+	"github.com/1layar/clibank/app/wallets"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

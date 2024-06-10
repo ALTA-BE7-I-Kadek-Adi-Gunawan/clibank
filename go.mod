@@ -1,4 +1,4 @@
-module github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank
+module github.com/1layar/clibank
 
 go 1.18
 
