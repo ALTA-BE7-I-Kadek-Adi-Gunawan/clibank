@@ -11,6 +11,7 @@ import (
 
 type IUserRepository interface {
 	Init(db *gorm.DB)
+	FindUsers() []User
 	FindByID(id int) (*User, error)
 	FindByPhone(phone string) (*User, error)
 	Create(user CreateUserDto) (User, error)
@@ -27,9 +28,15 @@ func (u *UserRepository) Init(db *gorm.DB) {
 	u.db = db
 }
 
+func (u *UserRepository) FindUsers() []User {
+	var users []User
+	u.db.Preload("Account").Preload("Account.Wallet").Find(&users)
+	return users
+}
+
 func (u *UserRepository) FindByID(id int) (*User, error) {
 	var user User
-	err := u.db.Where("id = ?", id).First(&user).Error
+	err := u.db.Preload("Account").Preload("Account.Wallet").Where("id = ?", id).First(&user).Error
 	return &user, err
 }
 

@@ -9,6 +9,11 @@ type MockUserRepository struct {
 	mock.Mock
 }
 
+func (m *MockUserRepository) FindUsers() []User {
+	args := m.Called()
+	return args.Get(0).([]User)
+}
+
 func (m *MockUserRepository) Create(data CreateUserDto) (User, error) {
 	args := m.Called(data)
 	return args.Get(0).(User), args.Error(1)

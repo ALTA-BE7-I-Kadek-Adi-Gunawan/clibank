@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net/http"
 	"runtime"
 	"strings"
 
@@ -12,7 +13,11 @@ import (
 	"github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/app/users"
 	"github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/app/wallets"
 	"github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/cmd"
+	"github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/controller"
 	"github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/platform"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
 const (
@@ -22,13 +27,14 @@ const (
 )
 
 type Application struct {
-	choice   int8
-	errorMsg string
-	display  string
-	config   *platform.Configuration
-	cmds     map[int8]Command
-	ctx      context.Context
-	database *platform.Database
+	choice          int8
+	errorMsg        string
+	display         string
+	config          *platform.Configuration
+	cmds            map[int8]Command
+	ctx             context.Context
+	database        *platform.Database
+	usersController *controller.UserController
 }
 
 func (a *Application) GetChoice() int8 {
@@ -65,6 +71,9 @@ func (a *Application) Init(db *platform.Database, c *platform.Configuration) {
 	topupService.Init(walletService, topupRepo)
 	transactionService.Init(transferRepo, *userService)
 
+	usersController := &controller.UserController{}
+	usersController.Init(userService)
+	a.usersController = usersController
 	// seed data
 	topupService.SeedOption()
 
@@ -181,7 +190,45 @@ func (a Application) ThankYou() string {
 	return message
 }
 
-func (a *Application) Run() {
+func (a *Application) Run(s ...string) error {
+	runMode := s[0]
+
+	switch runMode {
+	case "server":
+		a.RunServer()
+	case "cli":
+		a.RunCLI()
+	case "help":
+		fmt.Println("Usage:")
+		fmt.Println("\tclibank server")
+		fmt.Println("\tclibank cli")
+	default:
+		return errors.New("invalid run mode")
+	}
+	return nil
+}
+
+func (a *Application) RunServer() {
+
+	e := echo.New()
+	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+		Format: "method=${method}, uri=${uri}, status=${status}\n",
+	}))
+	e.GET("/swagger/*", echoSwagger.WrapHandler)
+	e.GET("/", func(c echo.Context) error {
+		return c.String(http.StatusOK, "Hello, World!")
+	})
+
+	e.GET("/api/v1/users", a.usersController.GetUsers)
+	e.GET("/api/v1/users/:id", a.usersController.GetUser)
+	e.PUT("/api/v1/users/:id", a.usersController.UpdateUser)
+	e.POST("/api/v1/users", a.usersController.CreateUser)
+	e.DELETE("/api/v1/users/:id", a.usersController.DeleteUser)
+
+	e.Logger.Fatal(e.Start(":8000"))
+}
+
+func (a *Application) RunCLI() {
 	a.display = a.Update()
 	fmt.Print(a.display)
 	if val, ok := a.cmds[a.choice]; ok {

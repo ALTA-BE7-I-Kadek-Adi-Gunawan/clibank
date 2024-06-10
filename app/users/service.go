@@ -4,11 +4,11 @@ import "errors"
 
 type IUserService interface {
 	// GetUser(phone string) (*User, error)
-	GetUsers() ([]*User, error)
+	GetUsers() ([]User, error)
 	UpdateUser(phone string, pin string, data UpdateUserDto) error
 	DeleteUser(phone string) error
 	CreateUser(data CreateUserDto) (User, error)
-	GetUser(phone string) (*User, error)
+	GetUser(phone string) (User, error)
 }
 
 type UserService struct {
@@ -19,6 +19,10 @@ func (u *UserService) Init(userRepository IUserRepository) {
 	u.userRepository = userRepository
 }
 
+func (u *UserService) GetUsers() ([]User, error) {
+	return u.userRepository.FindUsers(), nil
+}
+
 func (u *UserService) CreateUser(data CreateUserDto) (User, error) {
 	if data.Pin != data.ConfirmPin {
 		return User{}, errors.New("pin and confirm pin must be same")
@@ -26,6 +30,10 @@ func (u *UserService) CreateUser(data CreateUserDto) (User, error) {
 	user, err := u.userRepository.Create(data)
 
 	return user, err
+}
+
+func (u *UserService) GetById(id int) (*User, error) {
+	return u.userRepository.FindByID(id)
 }
 
 func (u *UserService) GetUser(phone string) (*User, error) {

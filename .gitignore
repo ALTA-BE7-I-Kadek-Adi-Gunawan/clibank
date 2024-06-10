@@ -15,4 +15,7 @@
 *.out
 
 # Dependency directories (remove the comment below to include it)
-# vendor/
+vendor/
+
+# Temp directory (remove the comment below to include it)
+tmp/
