@@ -1,7 +1,7 @@
 package topups
 
 import (
-	"github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/app/wallets"
+	"github.com/1layar/clibank/app/wallets"
 	"github.com/google/uuid"
 )
 

@@ -1,7 +1,7 @@
 package transactions
 
 import (
-	"github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/app/users"
+	"github.com/1layar/clibank/app/users"
 	"gorm.io/gorm"
 )
 

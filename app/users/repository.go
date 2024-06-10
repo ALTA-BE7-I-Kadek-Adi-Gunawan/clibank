@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/app/wallets"
+	"github.com/1layar/clibank/app/wallets"
 	"github.com/go-sql-driver/mysql"
 	"gorm.io/gorm"
 )

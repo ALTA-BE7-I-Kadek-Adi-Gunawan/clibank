@@ -6,8 +6,8 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 
-	"github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/app/users"
-	"github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/platform"
+	"github.com/1layar/clibank/app/users"
+	"github.com/1layar/clibank/platform"
 )
 
 type CmdUpdateUser struct {

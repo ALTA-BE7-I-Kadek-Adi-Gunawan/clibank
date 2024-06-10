@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/app/topups"
-	"github.com/ALTA-BE7-I-Kadek-Adi-Gunawan/clibank/platform"
+	"github.com/1layar/clibank/app/topups"
+	"github.com/1layar/clibank/platform"
 	"github.com/AlecAivazis/survey/v2"
 )
 
